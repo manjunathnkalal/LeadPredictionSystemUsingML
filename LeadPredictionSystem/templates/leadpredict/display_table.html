@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Lead Data</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/display_table.css' %}">
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg ">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}"><strong>Home</strong></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'predict' %}"><strong>Prediction</strong></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}"><strong>Dashboard</strong></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <strong>Download</strong>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'download_excel' %}">Excel</a>
+                <a class="dropdown-item" href="{% url 'download_pdf' %}">PDF</a>
+                <a class="dropdown-item" href="{% url 'download_json' %}">JSON</a>
+                <a class="dropdown-item" href="{% url 'download_word' %}">Word</a>
+              </div>
+            </li>
+          </ul>
+          <h1 class="brand">Probe IQ</h1>
+        </div>
+      </div>
+    </nav>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-wrap">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Total Visits</th>
+                    <th>Total Time Spent on Website</th>
+                    <th>Page Views Per Visit</th>
+                    <th>Lead Origin</th>
+                    <th>Lead Source</th>
+                    <th>Last Activity</th>
+                    <th>Specialization</th>
+                    <th>Current Occupation</th>
+                    <th>Tags</th>
+                    <th>Lead Quality</th>
+                    <th>City</th>
+                    <th>Do Not Email</th>
+                    <th>Last Notable Activity</th>
+                    <th>Free Copy of Mastering The Interview</th>
+                    <th>Status</th>
+                    <th>Probability</th>
+                    <th>Case</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for record in input_data %}
+                  <tr>
+                    <td>{{ record.total_visits }}</td>
+                    <td>{{ record.total_time_spent_on_website }}</td>
+                    <td>{{ record.page_views_per_visit }}</td>
+                    <td>{{ record.lead_origin }}</td>
+                    <td>{{ record.lead_source }}</td>
+                    <td>{{ record.last_activity }}</td>
+                    <td>{{ record.specialization }}</td>
+                    <td>{{ record.current_occupation }}</td>
+                    <td>{{ record.tags }}</td>
+                    <td>{{ record.lead_quality }}</td>
+                    <td>{{ record.city }}</td>
+                    <td>{{ record.do_not_email }}</td>
+                    <td>{{ record.last_notable_activity }}</td>
+                    <td>{{ record.free_copy_of_mastering_the_interview }}</td>
+                    <td>{{ record.status }}</td>
+                    <!-- Conditional formatting for probability -->
+                    <td class="{% if record.probability > 0.7 %}text-success{% elif record.probability > 0.3 %}text-warning{% else %}text-danger{% endif %}">
+                      {{ record.probability }}
+                    </td>
+                    <!-- Conditional formatting for case -->
+                    <td>
+                      <a href="#" class="btn {% if record.case == ' Hot case ' %}btn-danger{% elif record.case == ' Potential ' %}btn-warning{% else %}btn-info{% endif %}">
+                        {{ record.case }}
+                      </a>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="17">No data available</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
+
+

@@ -1,0 +1,27 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'css/home.css'%}">
+</head>
+<body>
+    <h1>Probe IQ</h1>
+    <div class="wrapper">
+        <h2>Welcome to the Lead Prediction System</h2>
+        <nav>
+            <a href="{% url 'predict' %}">
+                <button class="button-89" role="button">Predict Lead Conversion</button>
+            </a>
+            <a href="{% url 'display_table' %}">
+                <button class="button-89" role="button">View Lead Data</button>
+            </a>
+            <a href="{% url 'dashboard' %}">
+                <button class="button-89" role="button">Dashboard</button>
+            </a>
+        </nav>
+    </div>
+</body>
+</html>

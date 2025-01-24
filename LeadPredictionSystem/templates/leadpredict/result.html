@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{% static 'css/result.css' %}">
+</head>
+<body>
+    <h1>Prediction Result</h1>
+    <div class="wrapper">
+        <p><strong>Status:</strong> {{ status }}</p><br>
+        <p><strong>Probability:</strong> {{ probability }}</p><br>
+        <p><strong>Case Type:</strong> {{ case }}</p><br><br>
+
+        <!-- Emoticon Section -->
+        <div class="emoticon">
+            {% if case == ' Hot case ' %}
+                <img src="{% static 'images/hot_case.png' %}" alt="Hot case" style="width: 100px; height: 100px;">
+            {% elif case == ' Potential ' %}
+                <img src="{% static 'images/potential_case.png' %}" alt="Potential case" style="width: 100px; height: 100px;">
+            {% else %}
+                <img src="{% static 'images/cold_case.png' %}" alt="Cold case" style="width: 100px; height: 100px;">
+            {% endif %}
+        </div>
+
+        <nav>
+            <a href="{% url 'home' %}">
+                <button class="button-89" role="button">Back to Home</button>
+            </a>
+            <a href="{% url 'predict' %}">
+                <button class="button-89" role="button">Make Another Prediction</button>
+            </a>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,787 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}"><strong>Home</strong></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'predict' %}"><strong>Prediction</strong></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'display_table' %}"><strong>Data</strong></a>
+              </li>
+            </ul>
+            <h1 class="brand">Probe IQ</h1>
+          </div>
+        </div>
+    </nav>
+    <div class = "containr">
+        <div>
+            <div class = "wrapper3">
+                    <p><strong>Total Visitors:</strong> </p>
+                    <p>{{ total_visitors }}</p>             
+            </div>
+            <br>
+            <div class = "wrapper3">
+                <div ><p><strong>Average Total Visits:</strong></p>
+                    <p>{{ avg_total_visits|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class = "wrapper3">
+                <div ><p><strong>Average Time Spent on Website:</strong></p>
+                    <p>{{ avg_time_spent|floatformat:2 }} minutes</p>
+                </div>
+            </div>
+            <br>
+            <div class = "wrapper3">
+                <div ><p><strong>Average Page Views per Visit:</strong></p>
+                    <p>{{ avg_page_views_per_visit|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class = "wrapper3">
+                <p><strong>Leads Converted:</strong> </p>
+                <p>{{ converted_leads_count }}</p>             
+            </div>
+            <br>
+            <div class="wrapper3 glowing-wrapper">
+                <p><strong>Conversion Percentage:</strong></p>
+                <p>{{ conversion_percentage|floatformat:2 }}%</p>
+            </div>            
+        </div>
+    </div>  
+    <div class="chart-selection">
+        <div class="radio-wrapper-15">
+            <label>
+                <input type="radio" name="chartSelector" value="container1" checked>
+                <span> Lead Origin Data</span>
+            </label>
+            <label>
+                <input type="radio" name="chartSelector" value="container2">
+                <span> Lead Source Data</span>
+            </label>
+            <label>
+                <input type="radio" name="chartSelector" value="container3">
+                <span> Last Activity Data</span>
+            </label>
+            <label>
+                <input type="radio" name="chartSelector" value="container4">
+                <span> Specialization Data</span>
+            </label>
+            <label>
+                <input type="radio" name="chartSelector" value="container5">
+                <span> Lead Quality Data</span>
+            </label>
+        </div>
+    </div>
+    <br>
+    <div id="container1" class="container active">
+        <div class="wrapper1">
+            <canvas id="leadOriginPieChart" width="80px" height="80px"></canvas>
+            <script>
+                const leadOriginPieCtx = document.getElementById('leadOriginPieChart').getContext('2d');
+                const leadOriginPieChart = new Chart(leadOriginPieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                        {% for item in lead_origin_p %}
+                            '{{ item.lead_origin }}',
+                        {% endfor %}
+                    ],
+                       
+                        datasets: [{ 
+                            label: 'Lead Origin',
+                            data: [
+                                {% for item in lead_origin_p %}
+                                    {{ item.total }},
+                                {% endfor %}
+                                ],
+                            backgroundColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 186, 1)',
+                                'rgba(41, 41, 68, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 186, 1)',
+                                'rgba(41, 41, 68, 1)'
+                            ],
+                            borderWidth: 1
+                            }]
+                        },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Lead Origin Distribution'
+                        },
+                        legend:{
+                            display: false
+                        }
+                    },
+                    responsive: true,
+                }
+            });
+            </script>
+        </div>
+        <div class = "wrapper2">
+            <canvas id="leadOriginChart" width="40" height="20"><h3>Lead Origin vs Status</h3></canvas>
+            <script>
+                const leadOriginCtx = document.getElementById('leadOriginChart').getContext('2d');
+                const leadOriginChart = new Chart(leadOriginCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            {% for item in lead_origin_data %}
+                                '{{ item.lead_origin }}',
+                            {% endfor %}
+                        ],
+                        datasets: [
+                            {
+                                label: 'Converted',
+                                data: [
+                                    {% for item in lead_origin_data %}
+                                        {{ item.converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(28,28,28, 1)',
+                                borderColor: 'rgba(28,28,28, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Not Converted',
+                                data: [
+                                    {% for item in lead_origin_data %}
+                                        {{ item.not_converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(255, 149, 0, 1)',
+                                borderColor: 'rgba(255, 149, 0, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Lead Origin vs Status (Stacked Bar Chart)'
+                            },
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <div id="container2" class="container" >
+        <div class="wrapper1">
+            <canvas id="leadSourcePieChart" width="80px" height="80px"></canvas>
+            <script>
+                const leadSourcePieCtx = document.getElementById('leadSourcePieChart').getContext('2d');
+                const leadSourcePieChart = new Chart(leadSourcePieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            {% for item in lead_source_p %}
+                                '{{ item.lead_source }}',
+                            {% endfor %}
+                        ],
+                        datasets: [{
+                            label: 'Lead Source',
+                            data: [
+                                {% for item in lead_source_p %}
+                                    {{ item.total }},
+                                {% endfor %}
+                            ],
+                            backgroundColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Lead Source Distribution'
+                            },
+                            legend:{
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                    }
+                });
+            </script>
+        </div>
+        <div class="wrapper2">
+            <canvas id="leadSourceChart" width="40" height="20"></canvas>
+            <script>
+                const leadSourceCtx = document.getElementById('leadSourceChart').getContext('2d');
+                const leadSourceChart = new Chart(leadSourceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            {% for item in lead_source_data %}
+                                '{{ item.lead_source }}',
+                            {% endfor %}
+                        ],
+                        datasets: [
+                            {
+                                label: 'Converted',
+                                data: [
+                                    {% for item in lead_source_data %}
+                                        {{ item.converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(28,28,28, 1)',
+                                borderColor: 'rgba(28,28,28, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Not Converted',
+                                data: [
+                                    {% for item in lead_source_data %}
+                                        {{ item.not_converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(255, 149, 0, 1)',
+                                borderColor: 'rgba(255, 149, 0, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Lead Source vs Status (Stacked Bar Chart)'
+                            },
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <div id="container3" class="container" >
+        <div class = "wrapper1">
+            <canvas id="lastactivityPieChart" width="80px" height="80px"></canvas>
+            <script>
+                const lastactivityPieCtx = document.getElementById('lastactivityPieChart').getContext('2d');
+                const lastactivityPieChart = new Chart(lastactivityPieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            {% for item in last_activity_p %}
+                                '{{ item.last_activity }}',
+                            {% endfor %}
+                                ],
+                        datasets: [{
+                            label: 'Lead Origin',
+                            data: [
+                                {% for item in last_activity_p %}
+                                    {{ item.total }},
+                                {% endfor %}
+                                ],
+                            backgroundColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderWidth: 1
+                            }]
+                        },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Last Activity Distribution'
+                        },
+                        legend:{
+                            display: false
+                        }
+                    },
+                    responsive: true,
+                }
+            });
+            </script>
+        </div>
+        <div class = "wrapper2">
+            <canvas id="lastActivityChart" width="40" height="20"><h3>Last Activity vs Status</h3></canvas>
+            <script>
+                const lastActivityCtx = document.getElementById('lastActivityChart').getContext('2d');
+                const lastActivityChart = new Chart(lastActivityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            {% for item in last_activity_data %}
+                                '{{ item.last_activity }}',
+                            {% endfor %}
+                        ],
+                        datasets: [
+                            {
+                                label: 'Converted',
+                                data: [
+                                    {% for item in last_activity_data %}
+                                        {{ item.converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(28,28,28, 1)',
+                                borderColor: 'rgba(28,28,28, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Not Converted',
+                                data: [
+                                    {% for item in last_activity_data %}
+                                        {{ item.not_converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(255, 149, 0, 1)',
+                                borderColor: 'rgba(255, 149, 0, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Last Activity vs Status (Stacked Bar Chart)'
+                            },
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <div id="container4" class="container" >
+        <div class="wrapper1">
+            <canvas id="specializationPieChart" width="80px" height="80px"></canvas>
+            <script>
+                const specializationPieCtx = document.getElementById('specializationPieChart').getContext('2d');
+                const specializationPieChart = new Chart(specializationPieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            {% for item in specialization_p %}
+                                '{{ item.specialization }}',
+                            {% endfor %}
+                                ],
+                        datasets: [{
+                            label: 'Specialization',
+                            data: [
+                                {% for item in specialization_p %}
+                                    {{ item.total }},
+                                {% endfor %}
+                            ],
+                            backgroundColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 16, 1)',
+                                'rgba(41, 41, 68, 1)',
+                                'rgba(112, 133, 95, 1)',
+                                'rgba(162, 166, 124, 1)',
+                                'rgba(237, 202, 145, 1)',
+                                'rgba(219, 134, 77, 1)',
+                                'rgba(201, 100, 60, 1)',
+                                'rgba(104, 44, 54, 1)',
+                                'rgba(130, 142, 131, 1)',
+                                'rgba(197, 179, 87, 1)',
+                                'rgba(155, 92, 137, 1)',
+                                'rgba(0, 108, 25, 1)',
+                                'rgba(45, 28, 78, 1)',
+                                'rgba(0, 211, 249, 1)',
+                                'rgba(28, 28, 28, 1)',
+                                'rgba(255, 149, 0, 1)',
+                                'rgba(106, 132, 152, 1)',
+                                'rgba(52, 116, 28, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Speacialization Distribution'
+                            },
+                            legend:{
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                    }
+                });
+            </script>
+        </div>
+        <div class = "wrapper2">
+            <canvas id="specializationChart" width="40" height="20"><h3>Specialization vs Status</h3></canvas>
+            <script>
+                const specializationCtx = document.getElementById('specializationChart').getContext('2d');
+                const specializationChart = new Chart(specializationCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            {% for item in specialization_data %}
+                                '{{ item.specialization }}',
+                            {% endfor %}
+                        ],
+                        datasets: [
+                            {
+                                label: 'Converted',
+                                data: [
+                                    {% for item in specialization_data %}
+                                        {{ item.converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(28, 28, 28, 1)',
+                                borderColor: 'rgba(28, 28, 28, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Not Converted',
+                                data: [
+                                    {% for item in specialization_data %}
+                                        {{ item.not_converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(255, 149, 0, 1)',
+                                borderColor: 'rgba(255, 149, 0, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Speacialization vs Status (Stacked Bar Chart)'
+                            },
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                display:true,
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });                
+            </script>
+        </div>
+    </div>
+    <div id="container5" class="container" >
+        <div class = "wrapper1">
+            <canvas id="leadqualityPieChart" width="80px" height="80px"></canvas>
+            <script>
+                const leadqualityPieCtx = document.getElementById('leadqualityPieChart').getContext('2d');
+                const leadqualityPieChart = new Chart(leadqualityPieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            {% for item in lead_quality_p %}
+                                '{{ item.lead_quality }}',
+                            {% endfor %}
+                                ],
+                        datasets: [{
+                            label: 'Lead Origin',
+                            data: [
+                                {% for item in lead_quality_p %}
+                                    {{ item.total }},
+                                {% endfor %}
+                                ],
+                            backgroundColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 186, 1)',
+                                'rgba(41, 41, 68, 1)',
+                            ],
+                            borderColor: [
+                                'rgba(119, 30, 41, 1)',
+                                'rgba(236, 72, 42, 1)',
+                                'rgba(253, 201, 95, 1)',
+                                'rgba(96, 148, 186, 1)',
+                                'rgba(41, 41, 68, 1)',
+                            ],
+                            borderWidth: 1
+                            }]
+                        },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Lead Qulity Distribution'
+                        },
+                        legend:{
+                            display: false
+                        }
+                    },
+                    responsive: true,
+                }
+            });
+            </script>
+        </div>
+        <div class = "wrapper2">
+            <canvas id="leadqualityChart" width="40" height="20"><h3>Last Activity vs Status</h3></canvas>
+            <script>
+                const leadqualityCtx = document.getElementById('leadqualityChart').getContext('2d');
+                const leadqualityChart = new Chart(leadqualityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            {% for item in lead_quality_data %}
+                                '{{ item.lead_quality }}',
+                            {% endfor %}
+                        ],
+                        datasets: [
+                            {
+                                label: 'Converted',
+                                data: [
+                                    {% for item in lead_quality_data %}
+                                        {{ item.converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(28,28,28, 1)',
+                                borderColor: 'rgba(28,28,28, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Not Converted',
+                                data: [
+                                    {% for item in lead_quality_data %}
+                                        {{ item.not_converted_count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: 'rgba(255, 149, 0, 1)',
+                                borderColor: 'rgba(255, 149, 0, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Lead Quality vs Status (Stacked Bar Chart)'
+                            },
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <br>
+    <script>
+        const radioButtons = document.querySelectorAll('input[name="chartSelector"]');
+        const containers = document.querySelectorAll('.container');
+    
+        // Show the first container initially
+        containers.forEach(container => {
+            container.classList.remove('active'); // Hide all initially
+        });
+        containers[0].classList.add('active'); // Show the first one
+    
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Hide all containers
+                containers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                // Show the selected container
+                const selectedContainer = document.getElementById(this.value);
+                if (selectedContainer) {
+                    selectedContainer.classList.add('active'); // Make it visible
+                }
+            });
+        });
+    </script>               
+</body>
+</html>
+

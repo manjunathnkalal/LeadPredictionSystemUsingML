@@ -1,0 +1,150 @@
+/* General Container */
+.container {
+    font-size: large;
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 6px;
+    padding: 5px 30px;
+    margin: 5px 15px;
+    box-shadow: 0 10px 15px rgba(0, 79, 250, 0.945);
+    backdrop-filter: blur(2px);
+}
+
+/* Body Styling */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 0 10px;
+    /*background-image: url("8.jpg");
+    background: rgb(252,97,165);*/
+    background: radial-gradient(circle, rgba(111,248,251,1) 0%, rgba(3,16,245,0.9668242296918768) 100%);
+    background-size: cover;
+    background-position: center;
+}
+
+@font-face {
+    font-family: 'Retrograde';
+    src: url("../fonts/Retrograde.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+/* Header */
+header {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form Field Wrapper */
+.fieldWrapper {
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+.input input, 
+.input select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 10px;
+    border: 2px solid #ccc;
+    border-radius: 16px;
+    background-color: #f1f1f102;
+    font-size: 14px;
+}
+
+.input input:focus, 
+.input select:focus {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    outline: none;
+}
+
+/* Back to Home Link */
+a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #04f704;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container header {
+    font-family: 'Retrograde', sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    background-image: radial-gradient(circle, #f7e603, #fa8807);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+
+/* CSS */
+.button-62 {
+    background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+    border: 0;
+    border-radius: 12px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block; /* Change to block to allow centering */
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 2.5;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: box-shadow .2s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    margin: 20px auto; /* Center the button horizontally */
+}
+
+.button-62:not([disabled]):focus {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.button-62:not([disabled]):hover {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+
+  /* CSS for styling text in label tags */
+label {
+    font-family: 'Arial', sans-serif; /* Specify the font family */
+    font-size: 16px; /* Set the font size */
+    font-weight: bold; /* Make the text bold */
+    color: #fdfafa; /* Set the text color */
+    margin-bottom: 5px; /* Add some space below the label */
+    display: block; /* Ensure the label is displayed as a block element */
+    letter-spacing: 1px; /* Add spacing between letters */
+}
+ 

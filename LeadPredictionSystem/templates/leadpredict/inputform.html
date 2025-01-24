@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Prediction Input Form</title>
+    <link rel="stylesheet" href="{% static 'css/inputform.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>Input Form for Lead Prediction</header>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="input">
+                    {{ field }}
+                </div>
+            </div>
+            {% endfor %}
+            <button class="button-62" role="button">Predict</button>
+        </form>
+        <a href="{% url 'home' %}">Back to Home</a><br>
+    </div>
+</body>
+</html>
+
+
